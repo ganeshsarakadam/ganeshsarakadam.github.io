@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
-import { ImPointRight } from "react-icons/im";
+// import { ImPointRight } from "react-icons/im";
 
 function AboutCard() {
   return (
@@ -8,18 +8,18 @@ function AboutCard() {
       <Card.Body>
         <blockquote className="blockquote mb-0">
           <p style={{ textAlign: "justify" }}>
-            Hi Everyone, I am <span className="purple">Soumyajit Behera </span>
-            from <span className="purple"> Bhubaneswar, India.</span>
+            Hi Everyone, I am <span className="purple">Ganesh Sarakadam </span>
             <br />
-            I am currently employed as a software developer at Juspay.
+            I am currently pursing my Masters in Computer Science at  <span className="purple">Ohio University </span>  and will be graduating in this May 2024.
             <br />
-            I have completed Integrated MSc (IMSc) in Maths and Computing at BIT
+            <br/>
+            {/* I have completed Integrated MSc (IMSc) in Maths and Computing at BIT
             Mesra.
             <br />
             <br />
-            Apart from coding, some other activities that I love to do!
+            Apart from coding, some other activities that I love to do! */}
           </p>
-          <ul>
+          {/* <ul>
             <li className="about-activity">
               <ImPointRight /> Playing Games
             </li>
@@ -29,12 +29,12 @@ function AboutCard() {
             <li className="about-activity">
               <ImPointRight /> Travelling
             </li>
-          </ul>
+          </ul> */}
 
-          <p style={{ color: "rgb(155 126 172)" }}>
+          {/* <p style={{ color: "rgb(155 126 172)" }}>
             "Strive to build things that make a difference!"{" "}
-          </p>
-          <footer className="blockquote-footer">Soumyajit</footer>
+          </p> */}
+          {/* <footer className="blockquote-footer">Soumyajit</footer> */}
         </blockquote>
       </Card.Body>
     </Card>

@@ -20,9 +20,9 @@ function Home2() {
               LET ME <span className="purple"> INTRODUCE </span> MYSELF
             </h1>
             <p className="home-about-body">
-              I discovered my passion for programming and have been relentlessly honing my full stack development skills, knowing that the journey of learning and growth is endless
+              I discovered my passion for programming and have been relentlessly honing my full stack development skills, knowing that the journey of learning and growth is endless.
               <br />
-              <br />I am fluent in
+              <br />I am skilled in
               <i>
                 <b className="purple"> Javascript, Python and Java. </b>
               </i>
@@ -39,7 +39,7 @@ function Home2() {
               <br />
               <br />
               I also leverage my enthusiasm for crafting  <b className="purple">Web Components</b> using contemporary JavaScript libraries such as
-              <b className="purple"> React</b>, as well as frameworks like <b className="purple">Angular</b> and <b className="purple">Vue</b>.
+              <b className="purple"> React </b>, as well as frameworks like <b className="purple">Angular</b> and <b className="purple">Vue</b>.
               {/* with <b className="purple">Node.js</b> and
               <i>
                 <b className="purple">
