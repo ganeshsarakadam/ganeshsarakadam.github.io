@@ -219,7 +219,7 @@ export default function RotPage() {
                   scrolled: { height: 40, width: 40, borderRadius: 9999, position: "absolute", top: 10, left: 10 },
                 }}
                 whileHover={{ boxShadow: "0 0 30px 2px rgba(255, 255, 255, 0.5)" }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                transition={{ type: "spring", stiffness: 200, damping: 30 }}
                 style={{ objectFit: "cover", transition: "box-shadow 0.1s" }}
               />
             </motion.div>
