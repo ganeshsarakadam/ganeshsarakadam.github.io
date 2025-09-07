@@ -13,6 +13,9 @@ const nextConfig = {
     buildActivity: false,
     buildActivityPosition: 'bottom-right',
   },
+  output: 'export',
+  trailingSlash: true,
+  basePath: '',
 }
 
 export default nextConfig
