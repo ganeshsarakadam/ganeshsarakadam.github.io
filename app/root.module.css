@@ -12,6 +12,88 @@
   position: relative;
 }
 
+/* Apple-inspired liquid glass effect */
+.appleGlass {
+  position: relative;
+  background: transparent;
+  backdrop-filter: blur(1px) saturate(105%);
+  -webkit-backdrop-filter: blur(1px) saturate(105%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  filter: url(#liquidDistortion);
+  overflow: hidden;
+}
+
+/* When not scrolled - completely invisible */
+.motionDiv:not(.scrolled) {
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* The liquid shine effect - the secret sauce */
+.appleGlass::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border-radius: 2rem;
+  backdrop-filter: blur(1px);
+  box-shadow: 
+    inset -10px -8px 0px -11px rgba(255, 255, 255, 0.03),
+    inset 0px -9px 0px -8px rgba(255, 255, 255, 0.03);
+  opacity: 0.1;
+  z-index: -1;
+  filter: blur(1px) brightness(105%);
+}
+
+/* Liquid distortion effect using CSS filters */
+.appleGlass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.02) 50%, transparent 70%);
+  border-radius: 2rem;
+  opacity: 0.05;
+  z-index: 1;
+  pointer-events: none;
+  animation: liquidShine 4s ease-in-out infinite;
+}
+
+@keyframes liquidShine {
+  0%, 100% {
+    transform: translateX(-100%) skewX(-15deg);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(100%) skewX(-15deg);
+    opacity: 0.03;
+  }
+}
+
+/* Dark mode glass effect */
+@media (prefers-color-scheme: dark) {
+  .appleGlass {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+  
+  .appleGlass::after {
+    background: transparent;
+    box-shadow: 
+      inset -10px -8px 0px -11px rgba(255, 255, 255, 0.01),
+      inset 0px -9px 0px -8px rgba(255, 255, 255, 0.01);
+  }
+}
+
 .heroSection {
   display: flex;
   justify-content: center;

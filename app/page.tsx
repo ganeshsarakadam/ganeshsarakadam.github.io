@@ -158,7 +158,7 @@ export default function RotPage() {
   const { scrollY } = useScroll()
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    setIsScrolled(latest > 140)
+    setIsScrolled(latest > 200)
   })
 
   const [displayTab, setDisplayTab] = useState("info")
@@ -179,6 +179,17 @@ export default function RotPage() {
 
   return (
     <div className={styles.main}>
+      {/* SVG filter for liquid distortion effect */}
+      <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+        <defs>
+          <filter id="liquidDistortion" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence baseFrequency="0.02" numOctaves="3" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" />
+            <feGaussianBlur stdDeviation="0.5" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+        </defs>
+      </svg>
       <div
         className={cn(
           "z-[-1]",
@@ -195,17 +206,39 @@ export default function RotPage() {
       <div className={styles.detailsHolder}>
         <div className={styles.heroSection}>
           <motion.div
+            className={isScrolled ? styles.appleGlass : ""}
             style={{
-              transition: "all 0.1s ease",
+              transition: "all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
               zIndex: 10,
               maxWidth: 650,
               width: "100%",
-              borderRadius: "0px 0px 10px 10px",
+              borderRadius: isScrolled ? "2rem" : "0px 0px 10px 10px",
+              overflow: isScrolled ? "hidden" : "visible",
             }}
             animate={isScrolled ? "scrolled" : "normal"}
             variants={{
-              normal: { position: "static" },
-              scrolled: { top: 0, position: "fixed", height: 60, backdropFilter: "blur(10px)" },
+              normal: { 
+                position: "static",
+                backdropFilter: "blur(0px)",
+                backgroundColor: "transparent",
+                border: "1px solid transparent",
+                boxShadow: "0 0px 0px rgba(0, 0, 0, 0)",
+                opacity: 1
+              },
+              scrolled: { 
+                top: 0, 
+                position: "fixed", 
+                height: 60, 
+                backdropFilter: "blur(1px) saturate(105%)",
+                background: "transparent",
+                border: "1px solid rgba(255, 255, 255, 0.15)",
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.05)",
+                opacity: 1
+              },
+            }}
+            transition={{
+              duration: 0.4,
+              ease: [0.25, 0.46, 0.45, 0.94]
             }}
           >
             <motion.div className="relative h-[100%] w-[100%] flex items-center justify-end px-[15px]">
