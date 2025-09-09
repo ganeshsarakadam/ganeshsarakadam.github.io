@@ -19,10 +19,10 @@ import { Marquee } from "@/components/magicui/marquee"
 import { useTheme } from "next-themes"
 import ProjectCard from "@/components/projectCard/projectCard"
 import type { BlogType, ProjectType } from "@/lib/types"
-import { motion, useScroll, useMotionValueEvent } from "framer-motion"
+import { motion } from "framer-motion"
 import DefaultBlogCard from "@/components/blogs/blogCards"
 import Link from "next/link"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import cn from "classnames"
 import ExperienceSection from "@/components/experience-section"
 
@@ -155,11 +155,38 @@ export default function RotPage() {
 
   const { theme: currentTheme, setTheme: setCurrentTheme } = useTheme()
   const [isScrolled, setIsScrolled] = useState(false)
-  const { scrollY } = useScroll()
+  const heroRef = useRef<HTMLDivElement | null>(null)
+  const sentinelRef = useRef<HTMLDivElement | null>(null)
+  const [scrollThreshold, setScrollThreshold] = useState<number>(200)
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    setIsScrolled(latest > 200)
-  })
+  useEffect(() => {
+    const computeThreshold = () => {
+      const heroHeight = heroRef.current?.offsetHeight ?? window.innerHeight
+      // Use a fraction of the hero height with sane bounds for consistency
+      const dynamicThreshold = Math.max(120, Math.min(Math.floor(heroHeight * 0.6), 600))
+      setScrollThreshold(dynamicThreshold)
+    }
+
+    computeThreshold()
+    window.addEventListener("resize", computeThreshold)
+    return () => window.removeEventListener("resize", computeThreshold)
+  }, [])
+
+  useEffect(() => {
+    if (!sentinelRef.current) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsScrolled(!entry.isIntersecting)
+      },
+      {
+        root: null,
+        threshold: 0,
+        rootMargin: "-60px 0px 0px 0px",
+      }
+    )
+    observer.observe(sentinelRef.current)
+    return () => observer.disconnect()
+  }, [])
 
   const [displayTab, setDisplayTab] = useState("info")
 
@@ -204,7 +231,7 @@ export default function RotPage() {
       <div className="z-[-1] pointer-events-none absolute inset-0 flex items-center justify-center bg-[var(--bgColor)] [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] dark:bg-[var(--bgColor)] transition-colors duration-400"></div>
 
       <div className={styles.detailsHolder}>
-        <div className={styles.heroSection}>
+        <div className={styles.heroSection} ref={heroRef}>
           <motion.div
             className={isScrolled ? styles.appleGlass : ""}
             style={{
@@ -303,6 +330,8 @@ export default function RotPage() {
               <p>Theme</p>
             </button>
           </div>
+          {/* Sentinel for intersection to toggle sticky header */}
+          <div ref={sentinelRef} style={{ height: 1 }} />
         </div>
 
         <div className={styles.bio}>
