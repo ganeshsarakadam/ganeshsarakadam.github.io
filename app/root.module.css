@@ -358,6 +358,15 @@
   box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.56);
 }
 
+/* Smooth profile image animations */
+.profileImage {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform, width, height, top, left;
+}
+
 .pageFooter {
   margin-top: 60px;
   display: flex;

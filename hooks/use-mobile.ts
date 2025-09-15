@@ -8,7 +8,7 @@ const BREAKPOINTS = {
 } as const
 
 export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
+  const [isMobile, setIsMobile] = React.useState<boolean>(false)
   
   React.useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${BREAKPOINTS.mobile - 1}px)`)
@@ -31,12 +31,12 @@ export function useIsMobile() {
     }
   }, [])
   
-  return !!isMobile
+  return isMobile
 }
 
 // Enhanced version with multiple breakpoint support
 export function useBreakpoint() {
-  const [breakpoint, setBreakpoint] = React.useState<'mobile' | 'tablet' | 'desktop' | undefined>(undefined)
+  const [breakpoint, setBreakpoint] = React.useState<'mobile' | 'tablet' | 'desktop'>('desktop')
   
   React.useEffect(() => {
     const updateBreakpoint = () => {
@@ -69,7 +69,7 @@ export function useBreakpoint() {
 
 // Touch-aware version for better mobile UX
 export function useIsMobileTouch() {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
+  const [isMobile, setIsMobile] = React.useState<boolean>(false)
   const [hasTouch, setHasTouch] = React.useState<boolean>(false)
   
   React.useEffect(() => {
@@ -88,8 +88,8 @@ export function useIsMobileTouch() {
   }, [])
   
   return {
-    isMobile: !!isMobile,
+    isMobile,
     hasTouch,
-    isMobileTouch: !!isMobile && hasTouch
+    isMobileTouch: isMobile && hasTouch
   }
 }

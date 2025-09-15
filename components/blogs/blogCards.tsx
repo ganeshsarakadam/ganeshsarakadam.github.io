@@ -28,9 +28,12 @@ export default function DefaultBlogCard({ blogData }: { blogData: BlogType }) {
         const formattedMinutes = minutes.toString().padStart(2, '0');
         const ampm = isAM ? 'AM' : 'PM';
 
-        // Format date
-        const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
-        const formattedDate = date.toLocaleDateString('en-US', options);
+        // Format date using consistent formatting to avoid hydration issues
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const month = monthNames[date.getMonth()];
+        const day = date.getDate();
+        const year = date.getFullYear();
+        const formattedDate = `${month} ${day}, ${year}`;
 
         return `${formattedHours}:${formattedMinutes} ${ampm} · ${formattedDate}`;
     }

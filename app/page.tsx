@@ -176,7 +176,10 @@ export default function RotPage() {
     if (!sentinelRef.current) return
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsScrolled(!entry.isIntersecting)
+        // Use requestAnimationFrame for smoother state updates
+        requestAnimationFrame(() => {
+          setIsScrolled(!entry.isIntersecting)
+        })
       },
       {
         root: null,
@@ -235,17 +238,16 @@ export default function RotPage() {
           <motion.div
             className={isScrolled ? styles.appleGlass : ""}
             style={{
-              transition: "all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
               zIndex: 10,
               maxWidth: 650,
               width: "100%",
-              borderRadius: isScrolled ? "2rem" : "0px 0px 10px 10px",
-              overflow: isScrolled ? "hidden" : "visible",
             }}
             animate={isScrolled ? "scrolled" : "normal"}
             variants={{
               normal: { 
                 position: "static",
+                borderRadius: "0px 0px 10px 10px",
+                overflow: "visible",
                 backdropFilter: "blur(0px)",
                 backgroundColor: "transparent",
                 border: "1px solid transparent",
@@ -256,6 +258,8 @@ export default function RotPage() {
                 top: 0, 
                 position: "fixed", 
                 height: 60, 
+                borderRadius: "2rem",
+                overflow: "hidden",
                 backdropFilter: "blur(1px) saturate(105%)",
                 background: "transparent",
                 border: "1px solid rgba(255, 255, 255, 0.15)",
@@ -264,23 +268,65 @@ export default function RotPage() {
               },
             }}
             transition={{
-              duration: 0.4,
-              ease: [0.25, 0.46, 0.45, 0.94]
+              duration: 0.6,
+              ease: [0.4, 0.0, 0.2, 1],
+              layout: {
+                duration: 0.6,
+                ease: [0.4, 0.0, 0.2, 1]
+              }
             }}
+            layout
           >
-            <motion.div className="relative h-[100%] w-[100%] flex items-center justify-end px-[15px]">
+            <motion.div 
+              className="relative h-[100%] w-[100%] flex items-center justify-end px-[15px]"
+              layout
+            >
               <motion.img
+                key={currentTheme}
+                className={styles.profileImage}
                 src={currentTheme === "dark" ? "/ganesh-bnw.jpeg" : "/ganesh-color.jpeg"}
                 alt="Profile photo of Ganesh Sarakadam"
-                initial={{ height: 200, width: 200, borderRadius: 9999, margin: "0px auto", position: "static" }}
+                initial={false}
                 animate={isScrolled ? "scrolled" : "normal"}
                 variants={{
-                  normal: { height: 200, width: 200, borderRadius: 9999 },
-                  scrolled: { height: 40, width: 40, borderRadius: 9999, position: "absolute", top: 10, left: 10 },
+                  normal: { 
+                    height: 200, 
+                    width: 200, 
+                    borderRadius: 9999, 
+                    position: "static",
+                    margin: "0px auto",
+                    top: "auto",
+                    left: "auto",
+                    scale: 1
+                  },
+                  scrolled: { 
+                    height: 40, 
+                    width: 40, 
+                    borderRadius: 9999, 
+                    position: "absolute", 
+                    top: 10, 
+                    left: 10,
+                    margin: "0px",
+                    scale: 1
+                  },
                 }}
-                whileHover={{ boxShadow: "0 0 30px 2px rgba(255, 255, 255, 0.5)" }}
-                transition={{ type: "spring", stiffness: 200, damping: 30 }}
-                style={{ objectFit: "cover", transition: "box-shadow 0.1s" }}
+                whileHover={{ 
+                  scale: isScrolled ? 1.1 : 1.05,
+                  boxShadow: "0 0 30px 2px rgba(255, 255, 255, 0.5)",
+                  transition: { duration: 0.2 }
+                }}
+                transition={{ 
+                  duration: 0.6,
+                  ease: [0.4, 0.0, 0.2, 1],
+                  layout: {
+                    duration: 0.6,
+                    ease: [0.4, 0.0, 0.2, 1]
+                  }
+                }}
+                style={{ 
+                  objectFit: "cover"
+                }}
+                layout
               />
             </motion.div>
           </motion.div>
