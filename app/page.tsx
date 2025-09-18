@@ -159,6 +159,11 @@ export default function RotPage() {
   const sentinelRef = useRef<HTMLDivElement | null>(null)
   const [scrollThreshold, setScrollThreshold] = useState<number>(200)
 
+  const [isMounted, setIsMounted] = useState(false)
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   useEffect(() => {
     const computeThreshold = () => {
       const heroHeight = heroRef.current?.offsetHeight ?? window.innerHeight
@@ -282,9 +287,12 @@ export default function RotPage() {
               layout
             >
               <motion.img
-                key={currentTheme}
                 className={styles.profileImage}
-                src={currentTheme === "dark" ? "/ganesh-bnw.jpeg" : "/ganesh-color.jpeg"}
+                src={
+                  isMounted
+                    ? currentTheme === "dark" ? "/ganesh-bnw.jpeg" : "/ganesh-color.jpeg"
+                    : "/ganesh-bnw.jpeg"
+                }
                 alt="Profile photo of Ganesh Sarakadam"
                 initial={false}
                 animate={isScrolled ? "scrolled" : "normal"}
@@ -420,12 +428,12 @@ export default function RotPage() {
               <div className="bg-white/5 border border-white/10 rounded-xl p-6">
                 <h2 className="font-mono font-semibold text-xl mb-4">About Me</h2>
                 <p className="font-mono text-base leading-relaxed opacity-90">
-                  I'm a Software Engineer with 5+ years of experience building scalable web applications and design systems. 
-                  I specialize in modern web technologies with expertise in reusable component libraries, accessibility, and micro-frontend architectures. 
-                  My focus is on creating efficient, maintainable, and user-friendly applications.
+                  I'm a full‑stack engineer with 5+ years of experience and a front‑end heartbeat—focused on crafting design‑driven, accessible interfaces and scalable component systems that feel fast and intuitive. 
+                  I care deeply about performance, usability, and visual polish, turning product requirements into reliable, reusable UI building blocks.
                 </p>
                 <p className="font-mono text-base leading-relaxed opacity-90 mt-4">
-                  I'm passionate about clean code, design system adoption, and continuous learning, while staying up-to-date with the latest tools and practices in front-end development.
+                  On the back end, I optimize for simplicity and efficiency—lean services, clean APIs, solid data modeling, and the right caching/queues to keep things snappy end‑to‑end. 
+                  I enjoy owning features across the stack while staying strongly aligned with modern front‑end architecture and DX.
                 </p>
               </div>
             </div>
@@ -546,11 +554,6 @@ export default function RotPage() {
         )}
 
         <div className={styles.pageFooter}>
-          <Link href="/Ganesh-Sarakadam-Resume.pdf" target="_blank">
-            <p className={`flex items-center gap-[5px] underline font-mono font-bold text-2xl leading-[0.55rem] ${styles.resumeBtn}`}>
-              Resume <ArrowUpRight className="w-auto h-[26px]" size={16} />
-            </p>
-          </Link>
           <p className="text-center opacity-[0.7] max-w-[580px] font-mono font-semibold text-base tracking-tight">
             Built by Ganesh Sarakadam | Last Updated: January 2025.
           </p>
