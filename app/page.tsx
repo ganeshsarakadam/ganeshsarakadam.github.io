@@ -177,24 +177,34 @@ export default function RotPage() {
     return () => window.removeEventListener("resize", computeThreshold)
   }, [])
 
+  // Replace intersection observer with a scroll listener + hysteresis to avoid flicker
   useEffect(() => {
-    if (!sentinelRef.current) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // Use requestAnimationFrame for smoother state updates
-        requestAnimationFrame(() => {
-          setIsScrolled(!entry.isIntersecting)
+    let ticking = false
+    const HYSTERESIS = 40
+
+    const handleScroll = () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        const y = window.scrollY || window.pageYOffset || 0
+        setIsScrolled(prev => {
+          const enterThreshold = scrollThreshold + HYSTERESIS
+          const exitThreshold = scrollThreshold - HYSTERESIS
+          if (prev) {
+            return y > exitThreshold
+          } else {
+            return y > enterThreshold
+          }
         })
-      },
-      {
-        root: null,
-        threshold: 0,
-        rootMargin: "-60px 0px 0px 0px",
-      }
-    )
-    observer.observe(sentinelRef.current)
-    return () => observer.disconnect()
-  }, [])
+        ticking = false
+      })
+    }
+
+    // initialize on mount
+    handleScroll()
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [scrollThreshold])
 
   const [displayTab, setDisplayTab] = useState("info")
 
@@ -205,7 +215,6 @@ export default function RotPage() {
       if (res.ok) {
         const blogsArray = await res.json()
         setBlogsArray(blogsArray)
-        console.log("blogs: ", blogsArray)
       }
     }
     a()
