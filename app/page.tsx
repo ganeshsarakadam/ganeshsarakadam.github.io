@@ -22,7 +22,7 @@ import type { BlogType, ProjectType } from "@/lib/types"
 import { motion } from "framer-motion"
 import DefaultBlogCard from "@/components/blogs/blogCards"
 import Link from "next/link"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import cn from "classnames"
 import ExperienceSection from "@/components/experience-section"
 
@@ -155,56 +155,39 @@ export default function RotPage() {
 
   const { theme: currentTheme, setTheme: setCurrentTheme } = useTheme()
   const [isScrolled, setIsScrolled] = useState(false)
-  const heroRef = useRef<HTMLDivElement | null>(null)
-  const sentinelRef = useRef<HTMLDivElement | null>(null)
-  const [scrollThreshold, setScrollThreshold] = useState<number>(200)
-
   const [isMounted, setIsMounted] = useState(false)
   useEffect(() => {
     setIsMounted(true)
   }, [])
 
-  useEffect(() => {
-    const computeThreshold = () => {
-      const heroHeight = heroRef.current?.offsetHeight ?? window.innerHeight
-      // Use a fraction of the hero height with sane bounds for consistency
-      const dynamicThreshold = Math.max(120, Math.min(Math.floor(heroHeight * 0.6), 600))
-      setScrollThreshold(dynamicThreshold)
-    }
-
-    computeThreshold()
-    window.addEventListener("resize", computeThreshold)
-    return () => window.removeEventListener("resize", computeThreshold)
-  }, [])
-
-  // Replace intersection observer with a scroll listener + hysteresis to avoid flicker
+  // Simplified scroll detection with lower threshold and better debouncing
   useEffect(() => {
     let ticking = false
-    const HYSTERESIS = 40
+    const SCROLL_THRESHOLD = 100 // Reduced threshold for smoother transition
+    const HYSTERESIS = 20 // Reduced hysteresis to minimize dead zone
 
     const handleScroll = () => {
       if (ticking) return
       ticking = true
       requestAnimationFrame(() => {
-        const y = window.scrollY || window.pageYOffset || 0
+        const y = window.scrollY
         setIsScrolled(prev => {
-          const enterThreshold = scrollThreshold + HYSTERESIS
-          const exitThreshold = scrollThreshold - HYSTERESIS
+          // Use smaller hysteresis for smoother feeling
           if (prev) {
-            return y > exitThreshold
+            return y > (SCROLL_THRESHOLD - HYSTERESIS)
           } else {
-            return y > enterThreshold
+            return y > (SCROLL_THRESHOLD + HYSTERESIS)
           }
         })
         ticking = false
       })
     }
 
-    // initialize on mount
+    // Initialize on mount
     handleScroll()
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [scrollThreshold])
+  }, [])
 
   const [displayTab, setDisplayTab] = useState("info")
 
@@ -248,13 +231,14 @@ export default function RotPage() {
       <div className="z-[-1] pointer-events-none absolute inset-0 flex items-center justify-center bg-[var(--bgColor)] [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] dark:bg-[var(--bgColor)] transition-colors duration-400"></div>
 
       <div className={styles.detailsHolder}>
-        <div className={styles.heroSection} ref={heroRef}>
+        <div className={styles.heroSection}>
           <motion.div
             className={isScrolled ? styles.appleGlass : ""}
             style={{
               zIndex: 10,
               maxWidth: 650,
               width: "100%",
+              willChange: "transform, position, height, border-radius, backdrop-filter"
             }}
             animate={isScrolled ? "scrolled" : "normal"}
             variants={{
@@ -282,18 +266,12 @@ export default function RotPage() {
               },
             }}
             transition={{
-              duration: 0.6,
-              ease: [0.4, 0.0, 0.2, 1],
-              layout: {
-                duration: 0.6,
-                ease: [0.4, 0.0, 0.2, 1]
-              }
+              duration: 0.3,
+              ease: [0.25, 0.46, 0.45, 0.94]
             }}
-            layout
           >
             <motion.div 
               className="relative h-[100%] w-[100%] flex items-center justify-end px-[15px]"
-              layout
             >
               <motion.img
                 className={styles.profileImage}
@@ -333,15 +311,12 @@ export default function RotPage() {
                   transition: { duration: 0.2 }
                 }}
                 transition={{ 
-                  duration: 0.6,
-                  ease: [0.4, 0.0, 0.2, 1],
-                  layout: {
-                    duration: 0.6,
-                    ease: [0.4, 0.0, 0.2, 1]
-                  }
+                  duration: 0.3,
+                  ease: [0.25, 0.46, 0.45, 0.94]
                 }}
                 style={{ 
-                  objectFit: "cover"
+                  objectFit: "cover",
+                  willChange: "transform, width, height, border-radius"
                 }}
                 layout
               />
@@ -393,8 +368,6 @@ export default function RotPage() {
               <p>Theme</p>
             </button>
           </div>
-          {/* Sentinel for intersection to toggle sticky header */}
-          <div ref={sentinelRef} style={{ height: 1 }} />
         </div>
 
         <div className={styles.bio}>
