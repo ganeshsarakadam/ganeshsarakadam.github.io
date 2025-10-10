@@ -370,9 +370,6 @@ export default function RotPage() {
           </div>
         </div>
 
-        <div className={styles.bio}>
-          <p className="font-mono tracking-tighter underline leading-7 font-light text-2xl">📍Columbus, Ohio</p>
-        </div>
 
         <div className={styles.tabsHolder}>
           <div
